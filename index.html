@@ -1,0 +1,2298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>4 Pics 1 Word - MCB Juice Learning Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #4A90E2;
+            --primary-blue-dark: #357ABD;
+            --primary-blue-light: #7BB3F0;
+            --primary-blue-pale: #E8F4FD;
+            --mcb-red: #E31837;
+            --success-green: #5CB85C;
+            --warning-orange: #FF9800;
+            --text-dark: #2C3E50;
+            --text-gray: #6C757D;
+            --bg-white: #FFFFFF;
+            --bg-light: #F8F9FA;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.16);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-image: url('https://i.ibb.co/4bWCZ96/Background.jpg');
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .game-container {
+            background: var(--bg-white);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            animation: fadeInScale 0.5s ease-out;
+            overflow-y: auto;
+            max-height: 95vh;
+            position: relative;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== INTRO SCREEN ===== */
+        .intro-screen {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .intro-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            font-size: 56px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .intro-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .intro-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary-blue-dark);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .intro-subtitle {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark));
+            color: white;
+            border: none;
+            padding: 20px 60px;
+            font-size: 24px;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        /* ===== MODE SELECTION SCREEN ===== */
+        .mode-selection {
+            text-align: center;
+        }
+
+        .mode-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 32px;
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .mode-button {
+            background: var(--bg-light);
+            border: 3px solid var(--primary-blue-light);
+            padding: 24px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-button:hover {
+            background: var(--primary-blue-pale);
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        .mode-button-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-blue-dark);
+            margin-bottom: 8px;
+        }
+
+        .mode-button-desc {
+            font-size: 16px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        /* ===== LEVEL SELECTION SCREEN ===== */
+        .level-selection {
+            text-align: center;
+        }
+
+        .level-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .level-card {
+            background: var(--bg-light);
+            border: 3px solid transparent;
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .level-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .level-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .level-card.completed {
+            background: var(--primary-blue-pale);
+            border-color: var(--success-green);
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .level-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .level-badge {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .level-badge.easy { background: #4CAF50; }
+        .level-badge.average { background: #2196F3; }
+        .level-badge.medium { background: #FF9800; }
+        .level-badge.difficult { background: #F44336; }
+        .level-badge.hard { background: #9C27B0; }
+
+        .level-desc {
+            font-size: 15px;
+            color: var(--text-gray);
+        }
+
+        .back-button {
+            background: var(--text-gray);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: var(--text-dark);
+        }
+
+        /* ===== GAME SCREEN ===== */
+        .game-screen {
+            display: none;
+        }
+
+        .game-screen.active {
+            display: flex;
+            flex-direction: column;
+            padding-top: 10px;
+            min-height: 500px;
+        }
+
+        /* Home/Back button */
+        .home-button {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            width: 40px;
+            height: 40px;
+            background: rgba(248, 249, 250, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(74, 144, 226, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            opacity: 0.7;
+        }
+
+        .home-button:hover {
+            background: rgba(255, 255, 255, 0.98);
+            border-color: var(--primary-blue);
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.25);
+            opacity: 1;
+        }
+
+        .home-button:active {
+            transform: scale(0.95);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--bg-light);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .level-info {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-blue-dark);
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .coins-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary-blue-pale);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-blue-dark);
+        }
+
+        /* Images Grid - CUSTOMIZATION: Add your own 4 images */
+        .images-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .game-image {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            object-fit: cover;
+            background: var(--bg-light);
+            border: 2px solid var(--primary-blue-light);
+        }
+
+        /* Answer boxes */
+        .answer-boxes {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 8px 4px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .answer-box {
+            width: 32px;
+            min-width: 32px;
+            height: 38px;
+            background: white;
+            border: 3px solid var(--primary-blue);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .answer-box:hover:not(:empty) {
+            background: #FFE5E5;
+            border-color: #E31837;
+            transform: scale(0.95);
+        }
+
+        .answer-box.revealed {
+            background: var(--warning-orange);
+            border-color: var(--warning-orange);
+            color: white;
+            cursor: default;
+        }
+
+        .answer-box.correct {
+            background: var(--success-green);
+            border-color: var(--success-green);
+            color: white;
+            animation: bounceIn 0.5s ease;
+        }
+
+        @keyframes bounceIn {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Letter buttons */
+        .letters-container {
+            margin-bottom: 24px;
+        }
+
+        .letters-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .letter-button {
+            width: 44px;
+            height: 50px;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(74, 144, 226, 0.3);
+        }
+
+        .letter-button:hover:not(:disabled) {
+            background: var(--primary-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4);
+        }
+
+        .letter-button:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .letter-button:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        /* Hint button */
+        .hint-button {
+            width: 100%;
+            background: var(--warning-orange);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .hint-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .hint-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .hint-reveal-letter {
+            background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+        }
+
+        .hint-reveal-letter:hover:not(:disabled) {
+            background: linear-gradient(135deg, #357ABD 0%, #2869A8 100%);
+        }
+
+        .hint-remove-letters {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+        }
+
+        .hint-remove-letters:hover:not(:disabled) {
+            background: linear-gradient(135deg, #F57C00 0%, #E65100 100%);
+        }
+
+        .hint-reveal-word {
+            background: linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%);
+        }
+
+        .hint-reveal-word:hover:not(:disabled) {
+            background: linear-gradient(135deg, #7B1FA2 0%, #6A1B9A 100%);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .modal-text {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        /* Hint reveal modal */
+        .hint-word-display {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 8px 0;
+        }
+
+        .hint-letter {
+            width: 50px;
+            height: 60px;
+            background: var(--bg-light);
+            border: 3px solid var(--primary-blue-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .hint-letter:hover {
+            background: var(--warning-orange);
+            border-color: var(--warning-orange);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .hint-letter.revealed {
+            background: var(--warning-orange);
+            border-color: var(--warning-orange);
+            color: white;
+        }
+
+        /* MCB Juice Payment Modal */
+        .juice-modal {
+            background: #F5F5F5;
+        }
+
+        .juice-header {
+            background: var(--mcb-red);
+            color: white;
+            padding: 16px;
+            border-radius: 12px 12px 0 0;
+            margin: -24px -24px 20px;
+            text-align: center;
+        }
+
+        .juice-logo {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .juice-tagline {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .juice-step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .juice-step-subtitle {
+            font-size: 14px;
+            color: var(--text-gray);
+            margin-bottom: 16px;
+        }
+
+        .juice-form-group {
+            margin-bottom: 16px;
+        }
+
+        .juice-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .juice-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .juice-input:focus {
+            outline: none;
+            border-color: var(--mcb-red);
+        }
+
+        .juice-summary {
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .juice-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+
+        .juice-summary-label {
+            color: var(--text-gray);
+        }
+
+        .juice-summary-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .juice-summary-row.total {
+            border-top: 2px solid var(--bg-light);
+            margin-top: 8px;
+            padding-top: 12px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .pin-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .pin-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .pin-input:focus {
+            outline: none;
+            border-color: var(--mcb-red);
+        }
+
+        .juice-security-note {
+            background: #FFF9E6;
+            border-left: 4px solid var(--warning-orange);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-bottom: 16px;
+        }
+
+        .juice-receipt {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed #E0E0E0;
+            margin-bottom: 16px;
+        }
+
+        .receipt-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--success-green);
+            margin-bottom: 4px;
+        }
+
+        .receipt-subtitle {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .receipt-label {
+            color: var(--text-gray);
+        }
+
+        .receipt-value {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .juice-button {
+            width: 100%;
+            background: var(--mcb-red);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .juice-button:hover {
+            background: #C41530;
+            transform: translateY(-2px);
+        }
+
+        .juice-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .juice-button.secondary {
+            background: white;
+            color: var(--mcb-red);
+            border: 2px solid var(--mcb-red);
+            margin-top: 10px;
+        }
+
+        .juice-button.secondary:hover {
+            background: var(--mcb-red);
+            color: white;
+        }
+
+        /* Success Modal */
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            color: white;
+        }
+
+        .success-message {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .success-detail {
+            font-size: 15px;
+            color: var(--text-gray);
+            margin-bottom: 24px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .continue-button {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .continue-button:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Final Screen */
+        .final-screen {
+            text-align: center;
+        }
+
+        .final-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-blue-dark);
+            margin-bottom: 16px;
+        }
+
+        .final-subtitle {
+            font-size: 18px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .feature-item {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .feature-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .feature-desc {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--mcb-red), #C41530);
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .cta-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .cta-text {
+            font-size: 16px;
+            margin-bottom: 24px;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .download-button {
+            background: white;
+            color: var(--mcb-red);
+            border: none;
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .download-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .app-stores {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 12px;
+        }
+
+        .play-again-button {
+            width: 100%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-again-button:hover {
+            background: var(--primary-blue-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Points Packs */
+        .points-pack {
+            position: relative;
+            background: var(--bg-light);
+            border: 3px solid var(--primary-blue-light);
+            padding: 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .points-pack:hover {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue-pale);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .points-pack.best-value {
+            border-color: var(--success-green);
+            border-width: 4px;
+        }
+
+        .points-pack.premium {
+            border-color: var(--mcb-red);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            body {
+                padding: 4px;
+            }
+
+            .game-container {
+                padding: 16px;
+                border-radius: 16px;
+                max-height: 98vh;
+            }
+
+            .intro-logo {
+                width: 90px;
+                height: 90px;
+                font-size: 42px;
+            }
+
+            .intro-title {
+                font-size: 26px;
+            }
+
+            .intro-subtitle {
+                font-size: 18px;
+            }
+
+            .start-button {
+                padding: 14px 36px;
+                font-size: 18px;
+            }
+
+            .mode-title, .level-title {
+                font-size: 22px;
+            }
+
+            .level-card {
+                padding: 16px;
+            }
+
+            .game-header {
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+            }
+
+            .level-info {
+                font-size: 15px;
+            }
+
+            .coins-display {
+                padding: 8px 14px;
+                font-size: 16px;
+            }
+
+            .images-grid {
+                gap: 6px;
+                margin-bottom: 16px;
+            }
+
+            .answer-boxes {
+                gap: 2px;
+                padding: 8px 2px;
+                margin-bottom: 16px;
+            }
+
+            .answer-box {
+                width: 30px;
+                min-width: 30px;
+                height: 36px;
+                font-size: 16px;
+                border-width: 2px;
+            }
+
+            .letters-grid {
+                gap: 6px;
+            }
+
+            .letter-button {
+                width: 38px;
+                height: 44px;
+                font-size: 20px;
+            }
+
+            .hint-button {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .modal-content {
+                padding: 20px;
+                max-width: 95%;
+            }
+
+            .hint-letter {
+                width: 36px;
+                min-width: 36px;
+                height: 46px;
+                font-size: 22px;
+            }
+
+            .final-title {
+                font-size: 24px;
+            }
+
+            .cta-title {
+                font-size: 22px;
+            }
+
+            .feature-item {
+                padding: 16px;
+            }
+
+            .juice-header {
+                padding: 16px;
+                margin: -20px -20px 20px;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 380px) {
+            .game-container {
+                padding: 12px;
+            }
+
+            .answer-box {
+                width: 27px;
+                min-width: 27px;
+                height: 34px;
+                font-size: 15px;
+            }
+
+            .letter-button {
+                width: 36px;
+                height: 42px;
+                font-size: 18px;
+            }
+
+            .hint-letter {
+                width: 32px;
+                min-width: 32px;
+                height: 42px;
+                font-size: 20px;
+            }
+
+            .letters-grid {
+                gap: 5px;
+            }
+
+            .home-button {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+                top: 12px;
+                left: 12px;
+                border-width: 1.5px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- INTRO SCREEN -->
+        <div id="introScreen" class="intro-screen">
+            <div class="intro-logo"><img src="https://i.ibb.co/8ghh3rJ0/Logo.jpg" alt="4 Pics 1 Word Logo"></div>
+            <h1 class="intro-title">GUESS THE WORD</h1>
+            <p class="intro-subtitle">4 Pics 1 Word</p>
+            
+            <div style="background: var(--primary-blue-pale); padding: 20px; border-radius: 12px; margin: 24px 0; border-left: 4px solid var(--primary-blue);">
+                <div style="font-size: 18px; font-weight: 700; color: var(--primary-blue-dark); margin-bottom: 8px;">💰 How Points Work</div>
+                <div style="text-align: left; color: var(--text-gray); font-size: 15px; line-height: 1.6;">
+                    • Start with <strong>50 points</strong><br>
+                    • Complete levels: <strong>+15 to +25 points</strong><br>
+                    • Buy hints: <strong>20-35 points</strong> each<br>
+                    • Need more? <strong>Buy point packs!</strong>
+                </div>
+            </div>
+            
+            <button class="start-button" onclick="showModeSelection()">START</button>
+        </div>
+
+        <!-- MODE SELECTION SCREEN -->
+        <div id="modeSelection" class="mode-selection hidden">
+            <h2 class="mode-title">Choose Your Mode</h2>
+            <div class="mode-buttons">
+                <div class="mode-button" onclick="startProgressiveMode()">
+                    <div class="mode-button-title">📈 Progressive Mode</div>
+                    <div class="mode-button-desc">Play levels step-by-step from easy to hard</div>
+                </div>
+                <div class="mode-button" onclick="showLevelSelection()">
+                    <div class="mode-button-title">🎯 Choose Level</div>
+                    <div class="mode-button-desc">Select any level you want to play</div>
+                </div>
+            </div>
+            <button class="back-button" onclick="backToIntro()">Back</button>
+        </div>
+
+        <!-- LEVEL SELECTION SCREEN -->
+        <div id="levelSelection" class="level-selection hidden">
+            <!-- Home button -->
+            <button class="home-button" onclick="backToIntro()" title="Return to home">
+                <span>🏠</span>
+            </button>
+            
+            <h2 class="level-title">Select Level</h2>
+            <div class="levels-grid" id="levelsGrid"></div>
+            <button class="back-button" onclick="backToModeSelection()">Back</button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="gameScreen" class="game-screen">
+            <!-- Home button -->
+            <button class="home-button" onclick="confirmQuitGame()" title="Return to menu">
+                <span>🏠</span>
+            </button>
+            
+            <div class="game-header">
+                <div class="level-info" id="levelInfo">Level 1</div>
+                <div class="coins-display">
+                    <span>💰</span>
+                    <span id="coinsCount">50</span>
+                </div>
+            </div>
+
+            <!-- CUSTOMIZATION: Replace these with your own images -->
+            <div class="images-grid" id="imagesGrid">
+                <img class="game-image" src="https://via.placeholder.com/200?text=Image+1" alt="Clue 1">
+                <img class="game-image" src="https://via.placeholder.com/200?text=Image+2" alt="Clue 2">
+                <img class="game-image" src="https://via.placeholder.com/200?text=Image+3" alt="Clue 3">
+                <img class="game-image" src="https://via.placeholder.com/200?text=Image+4" alt="Clue 4">
+            </div>
+
+            <div class="answer-boxes" id="answerBoxes"></div>
+
+            <!-- Hints Section -->
+            <div style="margin-bottom: 16px;">
+                <div style="font-size: 14px; font-weight: 600; color: var(--text-gray); margin-bottom: 12px; text-align: center;">Need Help? Use a Hint:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="hint-button hint-reveal-letter" onclick="selectHint('revealLetter')">
+                        <span>💡</span>
+                        <span id="hintRevealText">Reveal 1 Letter (25 pts)</span>
+                    </button>
+                    <button class="hint-button hint-reveal-word" onclick="selectHint('revealWord')">
+                        <span>🔓</span>
+                        <span id="hintWordText">Reveal Word (60 pts)</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="letters-container">
+                <div class="letters-grid" id="lettersGrid"></div>
+            </div>
+            
+            <button class="back-button" onclick="confirmQuitGame()" style="margin-top: auto; margin-bottom: 0;">Back to Menu</button>
+        </div>
+
+        <!-- FINAL SCREEN -->
+        <div id="finalScreen" class="final-screen hidden">
+            <!-- Home button -->
+            <button class="home-button" onclick="backToIntro()" title="Return to home">
+                <span>🏠</span>
+            </button>
+            
+            <h1 class="final-title">🎉 Congratulations!</h1>
+            <p class="final-subtitle" id="finalSubtitle">You've completed all levels and learned about MCB Juice mobile payments!</p>
+
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-title">💳 PAYMENT</div>
+                    <div class="feature-desc">Pay merchants and businesses instantly with your mobile</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-title">💸 TRANSFER</div>
+                    <div class="feature-desc">Send money to friends and family in seconds</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-title">📱 REFILL</div>
+                    <div class="feature-desc">Top up your mobile phone or others' phones easily</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-title">📷 SCAN  TO  PAY</div>
+                    <div class="feature-desc">Scan QR codes for quick and secure payments</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-title">🔐 AUTHENTICATION</div>
+                    <div class="feature-desc">Secure your transactions with PIN and biometric protection</div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <div class="cta-title">Try Now for Real!</div>
+                <div class="cta-text">Ready to experience MCB Juice? Download the app and start making secure mobile payments today.</div>
+                <button class="download-button" onclick="window.open('https://play.google.com/store/apps/details?id=com.mcbmu.juice&hl=en', '_blank')">
+                    Download MCB Juice
+                </button>
+                <div class="app-stores">Available on App Store and Google Play</div>
+            </div>
+
+            <button class="play-again-button" onclick="resetGame()">Play Again</button>
+        </div>
+    </div>
+
+    <!-- BUY POINTS MODAL -->
+    <div id="buyPointsModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">💰 Not Enough Points!</h3>
+            <p class="modal-text">You need <span id="pointsNeeded">25</span> points but only have <span id="pointsCurrent">10</span> points.<br>Purchase a points pack to continue:</p>
+            
+            <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+                <div class="points-pack" onclick="purchasePoints('small')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 18px; color: var(--text-dark);">Small Pack</div>
+                            <div style="font-size: 14px; color: var(--text-gray);">30 + 5 bonus = <strong>35 points</strong></div>
+                        </div>
+                        <div style="font-size: 24px; font-weight: 800; color: var(--primary-blue);">Rs 50</div>
+                    </div>
+                </div>
+                
+                <div class="points-pack best-value" onclick="purchasePoints('medium')">
+                    <div style="position: absolute; top: -10px; right: 10px; background: var(--success-green); color: white; padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;">BEST VALUE</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 18px; color: var(--text-dark);">Medium Pack</div>
+                            <div style="font-size: 14px; color: var(--text-gray);">75 + 15 bonus = <strong>90 points</strong></div>
+                        </div>
+                        <div style="font-size: 24px; font-weight: 800; color: var(--primary-blue);">Rs 100</div>
+                    </div>
+                </div>
+                
+                <div class="points-pack premium" onclick="purchasePoints('large')">
+                    <div style="position: absolute; top: -10px; right: 10px; background: var(--mcb-red); color: white; padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 700;">PREMIUM</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 700; font-size: 18px; color: var(--text-dark);">Large Pack</div>
+                            <div style="font-size: 14px; color: var(--text-gray);">200 + 50 bonus = <strong>250 points</strong></div>
+                        </div>
+                        <div style="font-size: 24px; font-weight: 800; color: var(--primary-blue);">Rs 250</div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="juice-button secondary" onclick="closeBuyPointsModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- HINT MODAL -->
+    <div id="hintModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">💡 Choose a Letter to Reveal</h3>
+            <p class="modal-text">Click on any box to reveal the letter in that position</p>
+            <div class="hint-word-display" id="hintWordDisplay"></div>
+            <button class="juice-button secondary" onclick="closeHintModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- MCB JUICE PAYMENT MODAL -->
+    <div id="juiceModal" class="modal">
+        <div class="modal-content juice-modal">
+            <div class="juice-header">
+                <div class="juice-logo">MCB Juice</div>
+                <div class="juice-tagline">Mobile Payments Made Easy</div>
+            </div>
+
+            <!-- Step 1: Enter Phone Number -->
+            <div id="juiceStep1">
+                <h3 class="juice-step-title">Purchase Hint</h3>
+                <p class="juice-step-subtitle">Enter your mobile number to proceed with payment</p>
+                
+                <div class="juice-form-group">
+                    <label class="juice-label">Mobile Number</label>
+                    <input type="tel" class="juice-input" id="juicePhone" placeholder="+230 5XXX XXXX" maxlength="12">
+                </div>
+
+                <div class="juice-security-note">
+                    🔒 Your transaction is protected with bank-level security
+                </div>
+
+                <button class="juice-button" onclick="juiceNextStep()">Continue</button>
+                <button class="juice-button secondary" onclick="closeJuiceModal()">Cancel</button>
+            </div>
+
+            <!-- Step 2: Confirm and Enter PIN -->
+            <div id="juiceStep2" class="hidden">
+                <h3 class="juice-step-title">Confirm Payment</h3>
+                <p class="juice-step-subtitle">Review your purchase and enter your PIN</p>
+
+                <div class="juice-summary">
+                    <div class="juice-summary-row">
+                        <span class="juice-summary-label">Item:</span>
+                        <span class="juice-summary-value">Game Hint</span>
+                    </div>
+                    <div class="juice-summary-row">
+                        <span class="juice-summary-label">Recipient:</span>
+                        <span class="juice-summary-value" id="recipientDisplay">Game Service</span>
+                    </div>
+                    <div class="juice-summary-row">
+                        <span class="juice-summary-label">Phone:</span>
+                        <span class="juice-summary-value" id="phoneDisplay">+230 XXXX XXXX</span>
+                    </div>
+                    <div class="juice-summary-row total">
+                        <span class="juice-summary-label">Amount:</span>
+                        <span class="juice-summary-value">10 Coins</span>
+                    </div>
+                </div>
+
+                <div class="juice-form-group">
+                    <label class="juice-label">Enter your 4-digit mPIN</label>
+                    <div class="pin-input-container">
+                        <input type="password" class="pin-input" maxlength="1" id="pin1">
+                        <input type="password" class="pin-input" maxlength="1" id="pin2">
+                        <input type="password" class="pin-input" maxlength="1" id="pin3">
+                        <input type="password" class="pin-input" maxlength="1" id="pin4">
+                    </div>
+                </div>
+
+                <div class="juice-security-note">
+                    🔐 Never share your PIN with anyone. MCB will never ask for your PIN.
+                </div>
+
+                <button class="juice-button" onclick="completeJuicePayment()">Confirm Payment</button>
+                <button class="juice-button secondary" onclick="backToJuiceStep1()">Back</button>
+            </div>
+
+            <!-- Step 3: Receipt -->
+            <div id="juiceStep3" class="hidden">
+                <div class="juice-receipt">
+                    <div class="receipt-header">
+                        <div class="receipt-title">✓ Payment Successful</div>
+                        <div class="receipt-subtitle">Transaction completed</div>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Transaction ID:</span>
+                        <span class="receipt-value" id="transactionId">TXN123456789</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Date & Time:</span>
+                        <span class="receipt-value" id="transactionDate">-</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">From:</span>
+                        <span class="receipt-value" id="fromPhone">+230 XXXX XXXX</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">To:</span>
+                        <span class="receipt-value">Game Service</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Amount:</span>
+                        <span class="receipt-value">10 Coins</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Status:</span>
+                        <span class="receipt-value" style="color: #4CAF50;">Completed</span>
+                    </div>
+                </div>
+
+                <div class="juice-security-note">
+                    ✅ Payment processed securely through MCB Juice. Your hint will be revealed shortly.
+                </div>
+
+                <button class="juice-button" onclick="finishJuicePayment()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="success-icon">✓</div>
+            <h3 class="success-message" id="successTitle">Level Complete!</h3>
+            <p class="success-detail" id="successDetail">You've learned about mobile payments!</p>
+            <button class="continue-button" onclick="nextLevel()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        // ===== GAME DATA =====
+        const levels = [
+            {
+                id: 1,
+                word: 'PAYMENT',
+                difficulty: 'easy',
+                name: 'Level 1',
+                description: 'Learn how to make mobile payments',
+                images: [
+                    'https://i.ibb.co/XryCwyH1/Whats-App-Image-2026-01-29-at-00-14-48-1.jpg',
+                    'https://i.ibb.co/G3W3YnMV/Whats-App-Image-2026-01-29-at-00-14-49.jpg',
+                    'https://i.ibb.co/xt1kxbp5/Whats-App-Image-2026-01-29-at-00-14-49-1.jpg',
+                    'https://i.ibb.co/wFYMn5hF/Whats-App-Image-2026-01-29-at-00-14-48.jpg'
+                ],
+                extraLetters: 3,
+                pointsReward: 15,
+                successMessage: 'With MCB Juice, you can pay for goods and services anywhere using just your mobile phone. Fast, secure, and convenient!'
+            },
+            {
+                id: 2,
+                word: 'TRANSFER',
+                difficulty: 'average',
+                name: 'Level 2',
+                description: 'Send money to anyone instantly',
+                images: [
+                    'https://i.ibb.co/d43ZQ36Y/Transfer-4.jpg',
+                    'https://i.ibb.co/PG71ryqB/Transfer-1.jpg',
+                    'https://i.ibb.co/KjsQnmJ0/Transfer-2.jpg',
+                    'https://i.ibb.co/4ZyHzTsZ/Transfer-3.jpg'
+                ],
+                extraLetters: 4,
+                pointsReward: 15,
+                successMessage: 'Transfer money instantly to friends and family using their mobile number. No bank details needed!'
+            },
+            {
+                id: 3,
+                word: 'REFILL',
+                difficulty: 'medium',
+                name: 'Level 3',
+                description: 'Top up mobile credit easily',
+                images: [
+                    'https://i.ibb.co/MDDfsMJp/Whats-App-Image-2026-01-28-at-23-22-19-1.jpg',
+                    'https://i.ibb.co/4RhgcRtQ/Whats-App-Image-2026-01-28-at-23-22-19.jpg',
+                    'https://i.ibb.co/G1ZYp42/Whats-App-Image-2026-01-28-at-23-22-18.jpg',
+                    'https://i.ibb.co/nqPbQVP3/Whats-App-Image-2026-01-28-at-23-27-20.jpg'
+                ],
+                extraLetters: 5,
+                pointsReward: 20,
+                successMessage: 'Refill your mobile credit or top up for friends and family in seconds. Never run out of credit again!'
+            },
+            {
+                id: 4,
+                word: 'SCANTOPAY',
+                difficulty: 'difficult',
+                name: 'Level 4',
+                description: 'Pay instantly with QR codes',
+                images: [
+                    'https://i.ibb.co/bgBtGZz1/Whats-App-Image-2026-01-28-at-23-34-03-1.jpg',
+                    'https://i.ibb.co/VpT9CBDs/Whats-App-Image-2026-01-28-at-23-34-03.jpg',
+                    'https://i.ibb.co/pr5rsCsd/Whats-App-Image-2026-01-28-at-23-46-24.jpg',
+                    'https://i.ibb.co/QFGzK80k/Whats-App-Image-2026-01-28-at-23-46-25.jpg'
+                ],
+                extraLetters: 6,
+                pointsReward: 20,
+                successMessage: 'Scan QR codes to pay instantly at merchants. No cash needed - just scan and go!'
+            },
+            {
+                id: 5,
+                word: 'AUTHENTICATION',
+                difficulty: 'hard',
+                name: 'Level 5',
+                description: 'Secure your transactions',
+                images: [
+                    'https://i.ibb.co/Q75PKmyd/Whats-App-Image-2026-01-29-at-00-16-43-2.jpg',
+                    'https://i.ibb.co/5hWv7Dzh/Whats-App-Image-2026-01-29-at-00-16-43.jpg',
+                    'https://i.ibb.co/Zz4n72sr/Whats-App-Image-2026-01-29-at-00-16-42.jpg',
+                    'https://i.ibb.co/fYjZbcck/Whats-App-Image-2026-01-29-at-00-16-43-1.jpg'
+                ],
+                extraLetters: 8,
+                pointsReward: 25,
+                freeHint: true,
+                successMessage: 'Your transactions are protected with multiple layers of security including PIN, fingerprint, and face recognition!'
+            }
+        ];
+
+        // ===== HINT SYSTEM PRICING =====
+        const hintPricing = {
+            revealLetter: {
+                name: 'Reveal 1 Letter',
+                icon: '💡',
+                description: 'Choose which letter to reveal',
+                cost: {
+                    easy: 25,      // Levels 1-2
+                    medium: 30,    // Levels 3-4
+                    hard: 35       // Level 5
+                }
+            },
+            removeLetters: {
+                name: 'Remove Wrong Letters',
+                icon: '🗑️',
+                description: 'Remove 50% of incorrect letters',
+                cost: {
+                    easy: 20,
+                    medium: 25,
+                    hard: 30
+                }
+            },
+            revealWord: {
+                name: 'Reveal Word',
+                icon: '🔓',
+                description: 'Show the complete solution',
+                cost: {
+                    easy: 60,
+                    medium: 70,
+                    hard: 80
+                }
+            }
+        };
+
+        // ===== POINTS PACKS FOR PURCHASE =====
+        const pointsPacks = [
+            {
+                id: 'small',
+                name: 'Small Pack',
+                points: 30,
+                bonus: 5,
+                total: 35,
+                price: 'Rs 50',
+                priceValue: 50,
+                description: 'Perfect for one hint',
+                badge: null
+            },
+            {
+                id: 'medium',
+                name: 'Medium Pack',
+                points: 75,
+                bonus: 15,
+                total: 90,
+                price: 'Rs 100',
+                priceValue: 100,
+                description: 'Finish the game comfortably',
+                badge: 'BEST VALUE'
+            },
+            {
+                id: 'large',
+                name: 'Large Pack',
+                points: 200,
+                bonus: 50,
+                total: 250,
+                price: 'Rs 250',
+                priceValue: 250,
+                description: 'Unlimited hints + support us',
+                badge: 'PREMIUM'
+            }
+        ];
+
+        // Helper function to get hint cost based on level
+        function getHintCost(hintType, levelIndex) {
+            const level = levels[levelIndex];
+            let difficulty = 'medium';
+            
+            if (levelIndex <= 1) difficulty = 'easy';
+            else if (levelIndex >= 4) difficulty = 'hard';
+            else difficulty = 'medium';
+            
+            return hintPricing[hintType].cost[difficulty];
+        }
+
+        // ===== GAME STATE =====
+        let gameState = {
+            currentLevel: 0,
+            coins: 50,  // Start with 50 points
+            mode: 'progressive',
+            completedLevels: [],
+            currentAnswer: [],
+            availableLetters: [],
+            revealedPositions: [],
+            currentHintType: null  // Track which hint is being purchased
+        };
+
+        // ===== INITIALIZATION =====
+        function showModeSelection() {
+            document.getElementById('introScreen').classList.add('hidden');
+            document.getElementById('modeSelection').classList.remove('hidden');
+        }
+
+        function backToIntro() {
+            // Hide all screens
+            document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('active');
+            document.getElementById('levelSelection').classList.add('hidden');
+            document.getElementById('finalScreen').classList.add('hidden');
+            
+            // Show intro
+            document.getElementById('introScreen').classList.remove('hidden');
+        }
+
+        function startProgressiveMode() {
+            gameState.mode = 'progressive';
+            gameState.currentLevel = 0;
+            loadLevel(0);
+        }
+
+        function showLevelSelection() {
+            document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('levelSelection').classList.remove('hidden');
+            gameState.mode = 'choice';
+            renderLevelSelection();
+        }
+
+        function backToModeSelection() {
+            document.getElementById('levelSelection').classList.add('hidden');
+            document.getElementById('modeSelection').classList.remove('hidden');
+        }
+
+        function renderLevelSelection() {
+            const grid = document.getElementById('levelsGrid');
+            grid.innerHTML = '';
+            
+            levels.forEach((level, index) => {
+                const isCompleted = gameState.completedLevels.includes(index);
+                const card = document.createElement('div');
+                card.className = `level-card ${isCompleted ? 'completed' : ''}`;
+                card.onclick = () => loadLevel(index);
+                
+                card.innerHTML = `
+                    <div class="level-header">
+                        <div class="level-name">${level.name}</div>
+                        <div class="level-badge ${level.difficulty}">${level.difficulty.toUpperCase()}</div>
+                    </div>
+                    <div class="level-desc">${level.description}</div>
+                    ${isCompleted ? '<div style="color: #4CAF50; font-weight: 600; margin-top: 8px;">✓ Completed</div>' : ''}
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // ===== GAME LOGIC =====
+        function loadLevel(levelIndex) {
+            gameState.currentLevel = levelIndex;
+            const level = levels[levelIndex];
+            
+            // Hide all screens
+            document.getElementById('introScreen').classList.add('hidden');
+            document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('levelSelection').classList.add('hidden');
+            document.getElementById('finalScreen').classList.add('hidden');
+            
+            // Show game screen
+            document.getElementById('gameScreen').classList.add('active');
+            
+            // Update UI
+            document.getElementById('levelInfo').textContent = `Level ${levelIndex + 1} - ${level.difficulty.toUpperCase()}`;
+            document.getElementById('coinsCount').textContent = gameState.coins;
+            
+            // Load images
+            const imagesGrid = document.getElementById('imagesGrid');
+            imagesGrid.innerHTML = '';
+            level.images.forEach((imgUrl, i) => {
+                const img = document.createElement('img');
+                img.className = 'game-image';
+                img.src = imgUrl;
+                img.alt = `Clue ${i + 1}`;
+                imagesGrid.appendChild(img);
+            });
+            
+            // Initialize answer
+            gameState.currentAnswer = Array(level.word.length).fill('');
+            gameState.revealedPositions = [];
+            
+            // Free hint for AUTHENTICATION level
+            if (level.freeHint && level.word === 'AUTHENTICATION') {
+                // Reveal the first letter automatically
+                gameState.revealedPositions.push(0);
+                gameState.currentAnswer[0] = level.word[0];
+            }
+            
+            renderAnswerBoxes();
+            
+            // Generate letters
+            generateLetters(level);
+            
+            // Update hint buttons
+            updateHintButtons();
+        }
+
+        function generateLetters(level) {
+            const word = level.word;
+            const letters = [];
+            
+            // Add all letters from the word
+            for (let char of word) {
+                letters.push(char);
+            }
+            
+            // Add extra random letters based on difficulty
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const extraCount = level.extraLetters;
+            const usedLetters = word.split('');
+            
+            for (let i = 0; i < extraCount; i++) {
+                const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                letters.push(randomLetter);
+            }
+            
+            // Shuffle letters
+            gameState.availableLetters = letters.sort(() => Math.random() - 0.5);
+            renderLetters();
+        }
+
+        function renderAnswerBoxes() {
+            const container = document.getElementById('answerBoxes');
+            const level = levels[gameState.currentLevel];
+            container.innerHTML = '';
+            
+            for (let i = 0; i < level.word.length; i++) {
+                const box = document.createElement('div');
+                box.className = 'answer-box';
+                if (gameState.revealedPositions.includes(i)) {
+                    box.className += ' revealed';
+                }
+                box.textContent = gameState.currentAnswer[i];
+                box.onclick = () => removeLetter(i);
+                container.appendChild(box);
+                
+                // Add visual spacing for SCANTOPAY (SCAN TO PAY)
+                if (level.word === 'SCANTOPAY' && (i === 3 || i === 5)) {
+                    const spacer = document.createElement('div');
+                    spacer.style.width = '8px';
+                    spacer.style.flexShrink = '0';
+                    container.appendChild(spacer);
+                }
+            }
+        }
+
+        function renderLetters() {
+            const container = document.getElementById('lettersGrid');
+            container.innerHTML = '';
+            
+            gameState.availableLetters.forEach((letter, index) => {
+                const button = document.createElement('button');
+                button.className = 'letter-button';
+                button.textContent = letter;
+                button.onclick = () => selectLetter(letter, index);
+                button.disabled = false;
+                
+                // Check if letter is already used
+                // Count how many of this letter are available
+                const letterCount = gameState.availableLetters.filter(l => l === letter).length;
+                // Count how many are currently used by the user (not revealed)
+                const usedCount = gameState.currentAnswer.filter((l, idx) => 
+                    l === letter && !gameState.revealedPositions.includes(idx)
+                ).length;
+                // Count how many are revealed
+                const revealedCount = gameState.revealedPositions.filter(idx => 
+                    gameState.currentAnswer[idx] === letter
+                ).length;
+                
+                // Disable if all available letters are used (user-entered + revealed)
+                if (usedCount + revealedCount >= letterCount) {
+                    button.disabled = true;
+                }
+                
+                container.appendChild(button);
+            });
+        }
+
+        function selectLetter(letter, buttonIndex) {
+            // Find first empty position
+            const emptyIndex = gameState.currentAnswer.indexOf('');
+            if (emptyIndex !== -1 && !gameState.revealedPositions.includes(emptyIndex)) {
+                gameState.currentAnswer[emptyIndex] = letter;
+                renderAnswerBoxes();
+                renderLetters();
+                
+                // Check if word is complete and correct
+                if (!gameState.currentAnswer.includes('')) {
+                    checkAnswer();
+                }
+            }
+        }
+
+        function removeLetter(position) {
+            if (gameState.currentAnswer[position] && !gameState.revealedPositions.includes(position)) {
+                gameState.currentAnswer[position] = '';
+                renderAnswerBoxes();
+                renderLetters();
+            }
+        }
+
+        function checkAnswer() {
+            const level = levels[gameState.currentLevel];
+            const answer = gameState.currentAnswer.join('');
+            
+            if (answer === level.word) {
+                // Correct answer!
+                const boxes = document.querySelectorAll('.answer-box');
+                boxes.forEach(box => box.classList.add('correct'));
+                
+                setTimeout(() => {
+                    showSuccessModal(level);
+                }, 800);
+            } else {
+                // Wrong answer - shake animation
+                const container = document.getElementById('answerBoxes');
+                container.style.animation = 'none';
+                setTimeout(() => {
+                    container.style.animation = 'shake 0.5s ease';
+                }, 10);
+                
+                // Clear after shake
+                setTimeout(() => {
+                    // Clear only non-revealed positions
+                    gameState.currentAnswer = gameState.currentAnswer.map((letter, index) => {
+                        if (gameState.revealedPositions.includes(index)) {
+                            return letter; // Keep revealed letters
+                        }
+                        return ''; // Clear user-entered letters
+                    });
+                    renderAnswerBoxes();
+                    renderLetters();
+                }, 500);
+            }
+        }
+
+        function showSuccessModal(level) {
+            const isFirstTime = !gameState.completedLevels.includes(gameState.currentLevel);
+            const coinsEarned = isFirstTime ? level.pointsReward : 0;
+            
+            if (isFirstTime) {
+                gameState.completedLevels.push(gameState.currentLevel);
+                gameState.coins += coinsEarned;
+                document.getElementById('successTitle').textContent = `${level.name} Complete! +${coinsEarned} Points 💰`;
+            } else {
+                document.getElementById('successTitle').textContent = `${level.name} Complete!`;
+            }
+            
+            document.getElementById('successDetail').textContent = level.successMessage;
+            document.getElementById('successModal').classList.add('active');
+            
+            // Update coins display
+            document.getElementById('coinsCount').textContent = gameState.coins;
+        }
+
+        function nextLevel() {
+            document.getElementById('successModal').classList.remove('active');
+            
+            if (gameState.mode === 'progressive') {
+                if (gameState.currentLevel < levels.length - 1) {
+                    loadLevel(gameState.currentLevel + 1);
+                } else {
+                    showFinalScreen();
+                }
+            } else {
+                // Choice mode - back to level selection
+                document.getElementById('gameScreen').classList.remove('active');
+                showLevelSelection();
+            }
+        }
+
+        function showFinalScreen() {
+            document.getElementById('gameScreen').classList.remove('active');
+            
+            // Calculate final score message
+            const totalCoins = gameState.coins;
+            let scoreMessage = '';
+            let scoreEmoji = '';
+            
+            if (totalCoins >= 100) {
+                scoreEmoji = '🏆';
+                scoreMessage = `Outstanding! You collected ${totalCoins} coins! You're a mobile payment expert!`;
+            } else if (totalCoins >= 80) {
+                scoreEmoji = '🌟';
+                scoreMessage = `Excellent work! You earned ${totalCoins} coins! You're mastering mobile payments!`;
+            } else if (totalCoins >= 60) {
+                scoreEmoji = '⭐';
+                scoreMessage = `Great job! You got ${totalCoins} coins! You're learning fast!`;
+            } else {
+                scoreEmoji = '👍';
+                scoreMessage = `Well done! You collected ${totalCoins} coins! Keep practicing!`;
+            }
+            
+            // Update final screen with score
+            document.getElementById('finalSubtitle').innerHTML = `
+                <div style="font-size: 48px; margin-bottom: 12px;">${scoreEmoji}</div>
+                <div style="color: var(--primary-blue-dark); font-weight: 700; font-size: 20px; margin-bottom: 8px;">Final Score: ${totalCoins} Coins</div>
+                <div>You've completed all levels and learned about MCB Juice mobile payments!</div>
+                <div style="margin-top: 8px; font-size: 15px; color: var(--text-gray);">${scoreMessage}</div>
+            `;
+            
+            document.getElementById('finalScreen').classList.remove('hidden');
+        }
+
+        function resetGame() {
+            gameState = {
+                currentLevel: 0,
+                coins: 50,
+                mode: 'progressive',
+                completedLevels: [],
+                currentAnswer: [],
+                availableLetters: [],
+                revealedPositions: [],
+                currentHintType: null,
+                purchasingPack: null
+            };
+            
+            document.getElementById('finalScreen').classList.add('hidden');
+            document.getElementById('introScreen').classList.remove('hidden');
+        }
+
+        function confirmQuitGame() {
+            const confirmed = confirm('Are you sure you want to return to the menu? Your current progress will be lost.');
+            if (confirmed) {
+                backToIntro();
+            }
+        }
+
+        // ===== HINT SYSTEM =====
+        function selectHint(hintType) {
+            const cost = getHintCost(hintType, gameState.currentLevel);
+            
+            // Check if player has enough points
+            if (gameState.coins < cost) {
+                // Show buy points modal
+                document.getElementById('pointsNeeded').textContent = cost;
+                document.getElementById('pointsCurrent').textContent = gameState.coins;
+                document.getElementById('buyPointsModal').classList.add('active');
+                return;
+            }
+            
+            // Store the hint type for later
+            gameState.currentHintType = hintType;
+            
+            // Show MCB Juice payment modal
+            document.getElementById('juiceModal').classList.add('active');
+            document.getElementById('juiceStep1').classList.remove('hidden');
+            document.getElementById('juiceStep2').classList.add('hidden');
+            document.getElementById('juiceStep3').classList.add('hidden');
+            document.getElementById('juicePhone').value = '';
+            
+            // Update payment summary with hint cost
+            const hintInfo = hintPricing[hintType];
+            document.getElementById('recipientDisplay').textContent = hintInfo.name;
+        }
+
+        function updateHintButtons() {
+            const levelIndex = gameState.currentLevel;
+            
+            // Update each hint button with current costs
+            const revealCost = getHintCost('revealLetter', levelIndex);
+            const wordCost = getHintCost('revealWord', levelIndex);
+            
+            document.getElementById('hintRevealText').textContent = `Reveal 1 Letter (${revealCost} pts)`;
+            document.getElementById('hintWordText').textContent = `Reveal Word (${wordCost} pts)`;
+            
+            // Disable buttons if not enough points
+            const buttons = document.querySelectorAll('.hint-button');
+            buttons[0].disabled = gameState.coins < revealCost;
+            buttons[1].disabled = gameState.coins < wordCost;
+        }
+
+        // ===== BUY POINTS SYSTEM =====
+        function closeBuyPointsModal() {
+            document.getElementById('buyPointsModal').classList.remove('active');
+        }
+
+        function purchasePoints(packId) {
+            const pack = pointsPacks.find(p => p.id === packId);
+            if (!pack) return;
+            
+            // Store the pack being purchased
+            gameState.purchasingPack = pack;
+            
+            // Close buy points modal
+            closeBuyPointsModal();
+            
+            // Show MCB Juice payment modal for points purchase
+            document.getElementById('juiceModal').classList.add('active');
+            document.getElementById('juiceStep1').classList.remove('hidden');
+            document.getElementById('juiceStep2').classList.add('hidden');
+            document.getElementById('juiceStep3').classList.add('hidden');
+            document.getElementById('juicePhone').value = '';
+            
+            // Update payment summary
+            document.getElementById('recipientDisplay').textContent = `${pack.name} (${pack.total} points)`;
+            
+            // Mark that we're buying points, not a hint
+            gameState.currentHintType = null;
+        }
+
+        // ===== MCB JUICE PAYMENT FLOW =====
+        function juiceNextStep() {
+            const phone = document.getElementById('juicePhone').value;
+            
+            if (!phone || phone.length < 8) {
+                alert('Please enter a valid mobile number');
+                return;
+            }
+            
+            // Validate Mauritian number
+            if (!phone.startsWith('+230') && !phone.startsWith('5')) {
+                alert('Please enter a valid Mauritian mobile number (+230 5XXX XXXX)');
+                return;
+            }
+            
+            document.getElementById('phoneDisplay').textContent = phone;
+            
+            // Update amount based on what's being purchased
+            let amountText = '';
+            if (gameState.purchasingPack) {
+                amountText = gameState.purchasingPack.price;
+            } else if (gameState.currentHintType) {
+                const cost = getHintCost(gameState.currentHintType, gameState.currentLevel);
+                amountText = `${cost} Points`;
+            }
+            
+            // Update the total amount display
+            document.querySelector('.juice-summary-row.total .juice-summary-value').textContent = amountText;
+            
+            document.getElementById('juiceStep1').classList.add('hidden');
+            document.getElementById('juiceStep2').classList.remove('hidden');
+            
+            // Setup PIN inputs
+            setupPinInputs();
+        }
+
+        function backToJuiceStep1() {
+            document.getElementById('juiceStep2').classList.add('hidden');
+            document.getElementById('juiceStep1').classList.remove('hidden');
+        }
+
+        function setupPinInputs() {
+            const pins = ['pin1', 'pin2', 'pin3', 'pin4'];
+            pins.forEach((id, index) => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.oninput = () => {
+                    if (input.value.length === 1 && index < 3) {
+                        document.getElementById(pins[index + 1]).focus();
+                    }
+                };
+                input.onkeydown = (e) => {
+                    if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                        document.getElementById(pins[index - 1]).focus();
+                    }
+                };
+            });
+            document.getElementById('pin1').focus();
+        }
+
+        function completeJuicePayment() {
+            const pin1 = document.getElementById('pin1').value;
+            const pin2 = document.getElementById('pin2').value;
+            const pin3 = document.getElementById('pin3').value;
+            const pin4 = document.getElementById('pin4').value;
+            
+            if (!pin1 || !pin2 || !pin3 || !pin4) {
+                alert('Please enter your complete 4-digit PIN');
+                return;
+            }
+            
+            // Generate transaction details
+            const transactionId = 'TXN' + Date.now().toString().substr(-9);
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-GB') + ' ' + now.toLocaleTimeString('en-GB');
+            const phone = document.getElementById('juicePhone').value;
+            
+            document.getElementById('transactionId').textContent = transactionId;
+            document.getElementById('transactionDate').textContent = dateStr;
+            document.getElementById('fromPhone').textContent = phone;
+            
+            // Update amount in receipt
+            let amountText = '';
+            if (gameState.purchasingPack) {
+                amountText = gameState.purchasingPack.price;
+            } else if (gameState.currentHintType) {
+                const cost = getHintCost(gameState.currentHintType, gameState.currentLevel);
+                amountText = `${cost} Points`;
+            }
+            
+            // Update all amount displays in receipt
+            const receiptAmounts = document.querySelectorAll('#juiceStep3 .receipt-value');
+            receiptAmounts[4].textContent = amountText;  // Amount field
+            
+            document.getElementById('juiceStep2').classList.add('hidden');
+            document.getElementById('juiceStep3').classList.remove('hidden');
+        }
+
+        function finishJuicePayment() {
+            // Check if buying points pack or hint
+            if (gameState.purchasingPack) {
+                // Add points from pack
+                const pack = gameState.purchasingPack;
+                gameState.coins += pack.total;
+                document.getElementById('coinsCount').textContent = gameState.coins;
+                
+                // Clear purchasing pack
+                gameState.purchasingPack = null;
+                
+                // Close payment modal
+                closeJuiceModal();
+                
+                // Show success message
+                setTimeout(() => {
+                    alert(`✅ Purchase Successful!\n\nYou received ${pack.total} points!\n\nNew balance: ${gameState.coins} points`);
+                    updateHintButtons();
+                }, 300);
+                
+            } else if (gameState.currentHintType) {
+                // Deduct points for hint
+                const cost = getHintCost(gameState.currentHintType, gameState.currentLevel);
+                gameState.coins -= cost;
+                document.getElementById('coinsCount').textContent = gameState.coins;
+                
+                // Close payment modal
+                closeJuiceModal();
+                
+                // Apply the hint
+                setTimeout(() => {
+                    applyHint(gameState.currentHintType);
+                }, 300);
+            }
+        }
+
+        function applyHint(hintType) {
+            const level = levels[gameState.currentLevel];
+            
+            if (hintType === 'revealLetter') {
+                // Show modal to choose which letter to reveal
+                showHintSelection();
+                
+            } else if (hintType === 'revealWord') {
+                // Reveal the complete word
+                const word = level.word;
+                gameState.currentAnswer = word.split('');
+                gameState.revealedPositions = Array.from({length: word.length}, (_, i) => i);
+                renderAnswerBoxes();
+                
+                // Auto-check answer after a delay
+                setTimeout(() => {
+                    checkAnswer();
+                }, 800);
+            }
+        }
+
+        function showHintSelection() {
+            const level = levels[gameState.currentLevel];
+            const container = document.getElementById('hintWordDisplay');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < level.word.length; i++) {
+                const box = document.createElement('div');
+                box.className = 'hint-letter';
+                
+                if (gameState.currentAnswer[i]) {
+                    box.textContent = gameState.currentAnswer[i];
+                    box.style.cursor = 'default';
+                } else if (gameState.revealedPositions.includes(i)) {
+                    box.textContent = level.word[i];
+                    box.classList.add('revealed');
+                    box.style.cursor = 'default';
+                } else {
+                    box.textContent = '?';
+                    box.onclick = () => revealLetter(i);
+                }
+                
+                container.appendChild(box);
+            }
+            
+            document.getElementById('hintModal').classList.add('active');
+        }
+
+        function revealLetter(position) {
+            const level = levels[gameState.currentLevel];
+            const letter = level.word[position];
+            
+            gameState.revealedPositions.push(position);
+            gameState.currentAnswer[position] = letter;
+            
+            renderAnswerBoxes();
+            renderLetters();
+            closeHintModal();
+            updateHintButtons();
+            
+            // Check if word is complete
+            if (!gameState.currentAnswer.includes('')) {
+                checkAnswer();
+            }
+        }
+
+        function closeHintModal() {
+            document.getElementById('hintModal').classList.remove('active');
+        }
+
+        function closeJuiceModal() {
+            document.getElementById('juiceModal').classList.remove('active');
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
