@@ -347,6 +347,74 @@
             color: var(--primary-blue-dark);
         }
 
+        /* Jackpot Banner */
+        .jackpot-banner {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a1a;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .jackpot-banner-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .jackpot-banner-text {
+            font-size: 13px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .jackpot-eligibility-card {
+            background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
+        }
+
+        .jackpot-eligibility-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .jackpot-eligibility-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .jackpot-eligibility-text {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .jackpot-eligibility-prize {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 12px 0;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
         /* Images Grid - CUSTOMIZATION: Add your own 4 images */
         .images-grid {
             display: grid;
@@ -368,12 +436,10 @@
         .answer-boxes {
             display: flex;
             justify-content: center;
-            gap: 2px;
+            gap: 4px;
             margin-bottom: 20px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
+            flex-wrap: wrap;
             padding: 8px 4px;
-            -webkit-overflow-scrolling: touch;
         }
 
         .answer-box {
@@ -467,16 +533,20 @@
             background: var(--warning-orange);
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 16px;
+            padding: 12px 8px;
+            font-size: 14px;
             font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 4px;
             transition: all 0.3s ease;
+            min-height: 70px;
+            line-height: 1.2;
+            text-align: center;
         }
 
         .hint-button:hover:not(:disabled) {
@@ -488,6 +558,10 @@
             opacity: 0.4;
             cursor: not-allowed;
             transform: none;
+        }
+        
+        .hint-button span {
+            white-space: nowrap;
         }
 
         .hint-reveal-letter {
@@ -581,10 +655,9 @@
         .hint-word-display {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 24px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
+            flex-wrap: wrap;
             padding: 8px 0;
         }
 
@@ -617,191 +690,249 @@
             color: white;
         }
 
-        /* MCB Juice Payment Modal */
+        /* MCB Juice Payment Modal - Authentic Interface */
         .juice-modal {
-            background: #F5F5F5;
+            background: white;
         }
 
         .juice-header {
-            background: var(--mcb-red);
+            background: linear-gradient(135deg, #E31837 0%, #C41230 100%);
             color: white;
-            padding: 16px;
+            padding: 20px 16px;
             border-radius: 12px 12px 0 0;
-            margin: -24px -24px 20px;
+            margin: -24px -24px 24px;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(227, 24, 55, 0.3);
         }
 
         .juice-logo {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
             margin-bottom: 4px;
+            letter-spacing: 1px;
         }
 
         .juice-tagline {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 13px;
+            opacity: 0.95;
+            font-weight: 500;
         }
 
         .juice-step-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--text-dark);
+            color: #1a1a1a;
             margin-bottom: 8px;
         }
 
         .juice-step-subtitle {
             font-size: 14px;
-            color: var(--text-gray);
-            margin-bottom: 16px;
+            color: #666;
+            margin-bottom: 20px;
         }
 
         .juice-form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .juice-label {
             display: block;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text-dark);
+            color: #333;
             margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .juice-input {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: 2px solid #E0E0E0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
             transition: all 0.3s ease;
+            background: #FAFAFA;
         }
 
         .juice-input:focus {
             outline: none;
-            border-color: var(--mcb-red);
+            border-color: #E31837;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
         }
 
         .juice-summary {
-            background: white;
-            padding: 14px;
-            border-radius: 10px;
-            margin-bottom: 16px;
+            background: #F8F8F8;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #EFEFEF;
         }
 
         .juice-summary-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 10px 0;
             font-size: 15px;
+            border-bottom: 1px solid #E8E8E8;
+        }
+
+        .juice-summary-row:last-child {
+            border-bottom: none;
         }
 
         .juice-summary-label {
-            color: var(--text-gray);
+            color: #666;
+            font-weight: 500;
         }
 
         .juice-summary-value {
             font-weight: 600;
-            color: var(--text-dark);
+            color: #1a1a1a;
         }
 
         .juice-summary-row.total {
-            border-top: 2px solid var(--bg-light);
-            margin-top: 8px;
-            padding-top: 12px;
+            border-top: 2px solid #E31837;
+            margin-top: 12px;
+            padding-top: 16px;
             font-size: 18px;
             font-weight: 700;
+        }
+
+        .juice-summary-row.total .juice-summary-value {
+            color: #E31837;
+            font-size: 20px;
         }
 
         .pin-input-container {
             display: flex;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 20px;
+            margin: 24px 0;
         }
 
         .pin-input {
-            width: 50px;
-            height: 60px;
+            width: 56px;
+            height: 64px;
             text-align: center;
             border: 2px solid #E0E0E0;
-            border-radius: 10px;
-            font-size: 24px;
+            border-radius: 12px;
+            font-size: 28px;
             font-weight: 700;
+            background: #FAFAFA;
+            transition: all 0.3s ease;
         }
 
         .pin-input:focus {
             outline: none;
-            border-color: var(--mcb-red);
+            border-color: #E31837;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(227, 24, 55, 0.1);
         }
 
         .juice-security-note {
             background: #FFF9E6;
-            border-left: 4px solid var(--warning-orange);
-            padding: 10px;
+            border-left: 4px solid #FFA726;
+            padding: 12px;
             border-radius: 8px;
-            font-size: 13px;
-            color: var(--text-gray);
-            margin-bottom: 16px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .juice-receipt {
             background: white;
-            padding: 20px;
+            padding: 24px;
             border-radius: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            border: 2px solid #E8F5E9;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1);
         }
 
         .receipt-header {
             text-align: center;
             padding-bottom: 16px;
             border-bottom: 2px dashed #E0E0E0;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+        }
+
+        .receipt-success-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 32px;
+            color: white;
         }
 
         .receipt-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            color: var(--success-green);
+            color: #4CAF50;
             margin-bottom: 4px;
         }
 
         .receipt-subtitle {
             font-size: 13px;
-            color: var(--text-gray);
+            color: #666;
         }
 
         .receipt-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 12px 0;
             font-size: 14px;
+            border-bottom: 1px solid #F5F5F5;
+        }
+
+        .receipt-row:last-child {
+            border-bottom: none;
         }
 
         .receipt-label {
-            color: var(--text-gray);
+            color: #666;
+            font-weight: 500;
         }
 
         .receipt-value {
             font-weight: 600;
-            color: var(--text-dark);
+            color: #1a1a1a;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
         }
 
         .juice-button {
             width: 100%;
-            background: var(--mcb-red);
+            background: linear-gradient(135deg, #E31837 0%, #C41230 100%);
             color: white;
             border: none;
-            padding: 14px;
+            padding: 16px;
             font-size: 17px;
             font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(227, 24, 55, 0.3);
         }
 
         .juice-button:hover {
-            background: #C41530;
-            transform: translateY(-2px);
+            background: linear-gradient(135deg, #C41230 0%, #A00F28 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(227, 24, 55, 0.4);
+        }
+
+        .juice-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 8px rgba(227, 24, 55, 0.3);
         }
 
         .juice-button:disabled {
@@ -811,14 +942,19 @@
 
         .juice-button.secondary {
             background: white;
-            color: var(--mcb-red);
-            border: 2px solid var(--mcb-red);
+            color: #E31837;
+            border: 2px solid #E31837;
             margin-top: 10px;
+            box-shadow: none;
         }
 
         .juice-button.secondary:hover {
-            background: var(--mcb-red);
-            color: white;
+            background: #FFF5F7;
+            transform: translateY(-1px);
+        }
+
+        .juice-button.secondary:active {
+            background: #FFE8EC;
         }
 
         /* Success Modal */
@@ -1228,7 +1364,18 @@
                 <div class="coins-display">
                     <span>💰</span>
                     <span id="coinsCount">50</span>
+                    <span id="jackpotIndicator" style="display: none; margin-left: 8px; font-size: 20px;" title="Eligible for Jackpot Draw!">🎰</span>
                 </div>
+            </div>
+
+            <!-- Jackpot Eligibility Banner -->
+            <div id="jackpotBanner" class="jackpot-banner" style="display: none;">
+                <div class="jackpot-banner-title">
+                    <span>🎰</span>
+                    <span>JACKPOT ELIGIBLE!</span>
+                    <span>🎰</span>
+                </div>
+                <div class="jackpot-banner-text">Keep 100+ points to enter the draw: Win Rs 1000-3000!</div>
             </div>
 
             <!-- CUSTOMIZATION: Replace these with your own images -->
@@ -1435,8 +1582,9 @@
             <div id="juiceStep3" class="hidden">
                 <div class="juice-receipt">
                     <div class="receipt-header">
-                        <div class="receipt-title">✓ Payment Successful</div>
-                        <div class="receipt-subtitle">Transaction completed</div>
+                        <div class="receipt-success-icon">✓</div>
+                        <div class="receipt-title">Payment Successful</div>
+                        <div class="receipt-subtitle">Transaction completed successfully</div>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Transaction ID:</span>
@@ -1452,23 +1600,23 @@
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">To:</span>
-                        <span class="receipt-value">Game Service</span>
+                        <span class="receipt-value">MCB Juice Game</span>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Amount:</span>
-                        <span class="receipt-value">10 Coins</span>
+                        <span class="receipt-value">Rs 20</span>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Status:</span>
-                        <span class="receipt-value" style="color: #4CAF50;">Completed</span>
+                        <span class="receipt-value" style="color: #4CAF50; font-weight: 700;">✓ Completed</span>
                     </div>
                 </div>
 
                 <div class="juice-security-note">
-                    ✅ Payment processed securely through MCB Juice. Your hint will be revealed shortly.
+                    ✅ Your payment has been processed securely. Thank you for using MCB Juice!
                 </div>
 
-                <button class="juice-button" onclick="finishJuicePayment()">Continue</button>
+                <button class="juice-button" onclick="finishJuicePayment()">Done</button>
             </div>
         </div>
     </div>
@@ -1611,8 +1759,8 @@
                 points: 30,
                 bonus: 5,
                 total: 35,
-                price: 'Rs 50',
-                priceValue: 50,
+                price: 'Rs 20',
+                priceValue: 20,
                 description: 'Perfect for one hint',
                 badge: null
             },
@@ -1622,8 +1770,8 @@
                 points: 75,
                 bonus: 15,
                 total: 90,
-                price: 'Rs 100',
-                priceValue: 100,
+                price: 'Rs 20',
+                priceValue: 20,
                 description: 'Finish the game comfortably',
                 badge: 'BEST VALUE'
             },
@@ -1633,8 +1781,8 @@
                 points: 200,
                 bonus: 50,
                 total: 250,
-                price: 'Rs 250',
-                priceValue: 250,
+                price: 'Rs 20',
+                priceValue: 20,
                 description: 'Unlimited hints + support us',
                 badge: 'PREMIUM'
             }
@@ -1661,7 +1809,9 @@
             currentAnswer: [],
             availableLetters: [],
             revealedPositions: [],
-            currentHintType: null  // Track which hint is being purchased
+            currentHintType: null,  // Track which hint is being purchased
+            currentHintPrice: null,  // Track the price of the hint (Rs 20 or Rs 60)
+            purchasingPack: null  // Track if buying points pack
         };
 
         // ===== INITIALIZATION =====
@@ -1673,6 +1823,7 @@
         function backToIntro() {
             // Hide all screens
             document.getElementById('modeSelection').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.remove('active');
             document.getElementById('levelSelection').classList.add('hidden');
             document.getElementById('finalScreen').classList.add('hidden');
@@ -1739,6 +1890,9 @@
             // Update UI
             document.getElementById('levelInfo').textContent = `Level ${levelIndex + 1} - ${level.difficulty.toUpperCase()}`;
             document.getElementById('coinsCount').textContent = gameState.coins;
+            
+            // Update jackpot eligibility display
+            updateJackpotDisplay();
             
             // Load images
             const imagesGrid = document.getElementById('imagesGrid');
@@ -1927,6 +2081,9 @@
             
             // Update coins display
             document.getElementById('coinsCount').textContent = gameState.coins;
+            
+            // Update jackpot display after earning points
+            updateJackpotDisplay();
         }
 
         function nextLevel() {
@@ -1950,8 +2107,10 @@
             
             // Calculate final score message
             const totalCoins = gameState.coins;
+            const JACKPOT_THRESHOLD = 100;
             let scoreMessage = '';
             let scoreEmoji = '';
+            let jackpotMessage = '';
             
             if (totalCoins >= 100) {
                 scoreEmoji = '🏆';
@@ -1967,12 +2126,31 @@
                 scoreMessage = `Well done! You collected ${totalCoins} coins! Keep practicing!`;
             }
             
+            // Check jackpot eligibility
+            if (totalCoins >= JACKPOT_THRESHOLD) {
+                jackpotMessage = `
+                    <div class="jackpot-eligibility-card">
+                        <div class="jackpot-eligibility-icon">🎰</div>
+                        <div class="jackpot-eligibility-title">JACKPOT ELIGIBLE!</div>
+                        <div class="jackpot-eligibility-text">
+                            Congratulations! You have ${totalCoins} points and qualify for our special jackpot draw!
+                        </div>
+                        <div class="jackpot-eligibility-prize">Win Rs 1,000 - 3,000</div>
+                        <div class="jackpot-eligibility-text">
+                            Money will be sent directly to your MCB Juice account!<br>
+                            <strong>Contact us to claim your entry!</strong>
+                        </div>
+                    </div>
+                `;
+            }
+            
             // Update final screen with score
             document.getElementById('finalSubtitle').innerHTML = `
                 <div style="font-size: 48px; margin-bottom: 12px;">${scoreEmoji}</div>
                 <div style="color: var(--primary-blue-dark); font-weight: 700; font-size: 20px; margin-bottom: 8px;">Final Score: ${totalCoins} Coins</div>
                 <div>You've completed all levels and learned about MCB Juice mobile payments!</div>
                 <div style="margin-top: 8px; font-size: 15px; color: var(--text-gray);">${scoreMessage}</div>
+                ${jackpotMessage}
             `;
             
             document.getElementById('finalScreen').classList.remove('hidden');
@@ -2005,29 +2183,47 @@
         // ===== HINT SYSTEM =====
         function selectHint(hintType) {
             const cost = getHintCost(hintType, gameState.currentLevel);
+            const JACKPOT_THRESHOLD = 100;
             
             // Check if player has enough points
-            if (gameState.coins < cost) {
-                // Show buy points modal
-                document.getElementById('pointsNeeded').textContent = cost;
-                document.getElementById('pointsCurrent').textContent = gameState.coins;
-                document.getElementById('buyPointsModal').classList.add('active');
-                return;
+            if (gameState.coins >= cost) {
+                // Check if using hint will drop them below jackpot threshold
+                const newBalance = gameState.coins - cost;
+                let warningMessage = `Use ${cost} points to get this hint?`;
+                
+                if (gameState.coins >= JACKPOT_THRESHOLD && newBalance < JACKPOT_THRESHOLD) {
+                    warningMessage = `⚠️ WARNING ⚠️\n\nUsing this hint will drop you below 100 points!\n\nYou will LOSE your jackpot eligibility (Rs 1000-3000 prize)!\n\nCurrent: ${gameState.coins} pts → After: ${newBalance} pts\n\nAre you sure you want to continue?`;
+                }
+                
+                // Player has enough points - use them for FREE (no payment needed)
+                if (confirm(warningMessage)) {
+                    gameState.coins -= cost;
+                    document.getElementById('coinsCount').textContent = gameState.coins;
+                    updateJackpotDisplay(); // Update jackpot banner
+                    applyHint(hintType);
+                }
+            } else {
+                // Player doesn't have enough points - offer to buy hint with real money via MCB Juice
+                const hintInfo = hintPricing[hintType];
+                const hintPrice = hintType === 'revealLetter' ? 'Rs 20' : 'Rs 60'; // Reveal Letter = Rs 20, Reveal Word = Rs 60
+                
+                if (confirm(`You don't have enough points (need ${cost}, you have ${gameState.coins})!\n\nWould you like to buy "${hintInfo.name}" for ${hintPrice} using MCB Juice?`)) {
+                    // Store the hint type and price for purchase
+                    gameState.currentHintType = hintType;
+                    gameState.currentHintPrice = hintPrice;
+                    gameState.purchasingPack = null;
+                    
+                    // Show MCB Juice payment modal
+                    document.getElementById('juiceModal').classList.add('active');
+                    document.getElementById('juiceStep1').classList.remove('hidden');
+                    document.getElementById('juiceStep2').classList.add('hidden');
+                    document.getElementById('juiceStep3').classList.add('hidden');
+                    document.getElementById('juicePhone').value = '';
+                    
+                    // Update payment summary with hint info
+                    document.getElementById('recipientDisplay').textContent = hintInfo.name + ' (' + hintPrice + ')';
+                }
             }
-            
-            // Store the hint type for later
-            gameState.currentHintType = hintType;
-            
-            // Show MCB Juice payment modal
-            document.getElementById('juiceModal').classList.add('active');
-            document.getElementById('juiceStep1').classList.remove('hidden');
-            document.getElementById('juiceStep2').classList.add('hidden');
-            document.getElementById('juiceStep3').classList.add('hidden');
-            document.getElementById('juicePhone').value = '';
-            
-            // Update payment summary with hint cost
-            const hintInfo = hintPricing[hintType];
-            document.getElementById('recipientDisplay').textContent = hintInfo.name;
         }
 
         function updateHintButtons() {
@@ -2040,10 +2236,27 @@
             document.getElementById('hintRevealText').textContent = `Reveal 1 Letter (${revealCost} pts)`;
             document.getElementById('hintWordText').textContent = `Reveal Word (${wordCost} pts)`;
             
-            // Disable buttons if not enough points
+            // Buttons are always enabled - player can buy with money if no points
             const buttons = document.querySelectorAll('.hint-button');
-            buttons[0].disabled = gameState.coins < revealCost;
-            buttons[1].disabled = gameState.coins < wordCost;
+            buttons[0].disabled = false;
+            buttons[1].disabled = false;
+        }
+
+        // Update jackpot eligibility display
+        function updateJackpotDisplay() {
+            const JACKPOT_THRESHOLD = 100;
+            const jackpotBanner = document.getElementById('jackpotBanner');
+            const jackpotIndicator = document.getElementById('jackpotIndicator');
+            
+            if (gameState.coins >= JACKPOT_THRESHOLD) {
+                // Show jackpot eligibility
+                jackpotBanner.style.display = 'block';
+                jackpotIndicator.style.display = 'inline';
+            } else {
+                // Hide jackpot eligibility
+                jackpotBanner.style.display = 'none';
+                jackpotIndicator.style.display = 'none';
+            }
         }
 
         // ===== BUY POINTS SYSTEM =====
@@ -2114,6 +2327,12 @@
         function backToJuiceStep1() {
             document.getElementById('juiceStep2').classList.add('hidden');
             document.getElementById('juiceStep1').classList.remove('hidden');
+            
+            // Clear PIN inputs when going back
+            document.getElementById('pin1').value = '';
+            document.getElementById('pin2').value = '';
+            document.getElementById('pin3').value = '';
+            document.getElementById('pin4').value = '';
         }
 
         function setupPinInputs() {
@@ -2156,18 +2375,16 @@
             document.getElementById('transactionDate').textContent = dateStr;
             document.getElementById('fromPhone').textContent = phone;
             
-            // Update amount in receipt
-            let amountText = '';
+            // Update amount in receipt based on what's being purchased
+            let receiptAmount = 'Rs 20';
             if (gameState.purchasingPack) {
-                amountText = gameState.purchasingPack.price;
+                receiptAmount = gameState.purchasingPack.price;
             } else if (gameState.currentHintType) {
-                const cost = getHintCost(gameState.currentHintType, gameState.currentLevel);
-                amountText = `${cost} Points`;
+                receiptAmount = gameState.currentHintPrice; // Rs 20 for letter, Rs 60 for word
             }
             
-            // Update all amount displays in receipt
             const receiptAmounts = document.querySelectorAll('#juiceStep3 .receipt-value');
-            receiptAmounts[4].textContent = amountText;  // Amount field
+            receiptAmounts[4].textContent = receiptAmount;  // Amount field
             
             document.getElementById('juiceStep2').classList.add('hidden');
             document.getElementById('juiceStep3').classList.remove('hidden');
@@ -2194,16 +2411,18 @@
                 }, 300);
                 
             } else if (gameState.currentHintType) {
-                // Deduct points for hint
-                const cost = getHintCost(gameState.currentHintType, gameState.currentLevel);
-                gameState.coins -= cost;
-                document.getElementById('coinsCount').textContent = gameState.coins;
+                // Bought hint with real money (MCB Juice payment)
+                // Don't deduct points - they paid with real money!
+                const hintInfo = hintPricing[gameState.currentHintType];
                 
                 // Close payment modal
                 closeJuiceModal();
                 
-                // Apply the hint
+                // Show success message
                 setTimeout(() => {
+                    alert(`✅ Payment Successful!\n\nYou purchased "${hintInfo.name}" for ${gameState.currentHintPrice}!`);
+                    
+                    // Apply the hint
                     applyHint(gameState.currentHintType);
                 }, 300);
             }
@@ -2281,6 +2500,18 @@
 
         function closeJuiceModal() {
             document.getElementById('juiceModal').classList.remove('active');
+            
+            // Reset modal to step 1
+            document.getElementById('juiceStep1').classList.remove('hidden');
+            document.getElementById('juiceStep2').classList.add('hidden');
+            document.getElementById('juiceStep3').classList.add('hidden');
+            
+            // Clear all inputs
+            document.getElementById('juicePhone').value = '';
+            document.getElementById('pin1').value = '';
+            document.getElementById('pin2').value = '';
+            document.getElementById('pin3').value = '';
+            document.getElementById('pin4').value = '';
         }
 
         // Add shake animation
