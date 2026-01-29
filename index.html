@@ -415,6 +415,34 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
+        .jackpot-advice {
+            background: linear-gradient(135deg, #FFF9E6 0%, #FFE8B3 100%);
+            border: 2px solid #FFD700;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.2);
+        }
+
+        .jackpot-advice-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .jackpot-advice-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #1a1a1a;
+        }
+
+        .jackpot-advice-text strong {
+            color: #FF9800;
+            font-weight: 700;
+        }
+
         /* Images Grid - CUSTOMIZATION: Add your own 4 images */
         .images-grid {
             display: grid;
@@ -1390,6 +1418,15 @@
 
             <!-- Hints Section -->
             <div style="margin-bottom: 16px;">
+                <!-- Jackpot Advisory Message -->
+                <div id="jackpotAdvice" class="jackpot-advice" style="display: none;">
+                    <div class="jackpot-advice-icon">💡</div>
+                    <div class="jackpot-advice-text">
+                        <strong>Smart Tip:</strong> Consider buying hints with MCB Juice instead of using points! 
+                        Finish with 100+ points to win Rs 1000-3000! 🎰
+                    </div>
+                </div>
+                
                 <div style="font-size: 14px; font-weight: 600; color: var(--text-gray); margin-bottom: 12px; text-align: center;">Need Help? Use a Hint:</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <button class="hint-button hint-reveal-letter" onclick="selectHint('revealLetter')">
@@ -2183,25 +2220,15 @@
         // ===== HINT SYSTEM =====
         function selectHint(hintType) {
             const cost = getHintCost(hintType, gameState.currentLevel);
-            const JACKPOT_THRESHOLD = 100;
             
             // Check if player has enough points
             if (gameState.coins >= cost) {
-                // Check if using hint will drop them below jackpot threshold
-                const newBalance = gameState.coins - cost;
-                let warningMessage = `Use ${cost} points to get this hint?`;
+                // Player has enough points - use them directly (no confirmation)
+                gameState.coins -= cost;
+                document.getElementById('coinsCount').textContent = gameState.coins;
+                updateJackpotDisplay(); // Update jackpot banner
+                applyHint(hintType);
                 
-                if (gameState.coins >= JACKPOT_THRESHOLD && newBalance < JACKPOT_THRESHOLD) {
-                    warningMessage = `⚠️ WARNING ⚠️\n\nUsing this hint will drop you below 100 points!\n\nYou will LOSE your jackpot eligibility (Rs 1000-3000 prize)!\n\nCurrent: ${gameState.coins} pts → After: ${newBalance} pts\n\nAre you sure you want to continue?`;
-                }
-                
-                // Player has enough points - use them for FREE (no payment needed)
-                if (confirm(warningMessage)) {
-                    gameState.coins -= cost;
-                    document.getElementById('coinsCount').textContent = gameState.coins;
-                    updateJackpotDisplay(); // Update jackpot banner
-                    applyHint(hintType);
-                }
             } else {
                 // Player doesn't have enough points - offer to buy hint with real money via MCB Juice
                 const hintInfo = hintPricing[hintType];
@@ -2247,15 +2274,31 @@
             const JACKPOT_THRESHOLD = 100;
             const jackpotBanner = document.getElementById('jackpotBanner');
             const jackpotIndicator = document.getElementById('jackpotIndicator');
+            const jackpotAdvice = document.getElementById('jackpotAdvice');
+            
+            // Safety check - elements might not exist yet
+            if (!jackpotBanner || !jackpotIndicator) {
+                return;
+            }
             
             if (gameState.coins >= JACKPOT_THRESHOLD) {
                 // Show jackpot eligibility
                 jackpotBanner.style.display = 'block';
                 jackpotIndicator.style.display = 'inline';
+                
+                // Show advice to buy hints instead of using points
+                if (jackpotAdvice) {
+                    jackpotAdvice.style.display = 'flex';
+                }
             } else {
                 // Hide jackpot eligibility
                 jackpotBanner.style.display = 'none';
                 jackpotIndicator.style.display = 'none';
+                
+                // Hide advice
+                if (jackpotAdvice) {
+                    jackpotAdvice.style.display = 'none';
+                }
             }
         }
 
@@ -2458,14 +2501,17 @@
                 const box = document.createElement('div');
                 box.className = 'hint-letter';
                 
-                if (gameState.currentAnswer[i]) {
+                if (gameState.currentAnswer[i] && gameState.currentAnswer[i] !== '') {
+                    // User has already filled this position
                     box.textContent = gameState.currentAnswer[i];
                     box.style.cursor = 'default';
                 } else if (gameState.revealedPositions.includes(i)) {
+                    // This position was revealed by a hint
                     box.textContent = level.word[i];
                     box.classList.add('revealed');
                     box.style.cursor = 'default';
                 } else {
+                    // Empty position - can be revealed
                     box.textContent = '?';
                     box.onclick = () => revealLetter(i);
                 }
