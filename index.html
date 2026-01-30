@@ -2335,6 +2335,15 @@
                         }
                         return ''; // Clear user-entered letters
                     });
+                    // Clear button indices for non-revealed positions
+                    if (gameState.usedButtonIndices) {
+                        gameState.usedButtonIndices = gameState.usedButtonIndices.map((btnIndex, index) => {
+                            if (gameState.revealedPositions.includes(index)) {
+                                return btnIndex; // Keep revealed positions' button indices
+                            }
+                            return null; // Clear user-entered button indices
+                        });
+                    }
                     renderAnswerBoxes();
                     renderLetters();
                 }, 500);
