@@ -2180,6 +2180,7 @@
             // Initialize answer
             gameState.currentAnswer = Array(level.word.length).fill('');
             gameState.revealedPositions = [];
+            gameState.usedButtonIndices = [];
             
             // Free hint for AUTHENTICATION level
             if (level.freeHint && level.word === 'AUTHENTICATION') {
@@ -2250,30 +2251,24 @@
             const container = document.getElementById('lettersGrid');
             container.innerHTML = '';
             
-            // Create a map to track how many of each letter we've already rendered as "used"
-            const renderedUsed = {};
+            // Get list of button indices that are currently in use
+            const usedIndices = new Set();
+            if (gameState.usedButtonIndices) {
+                gameState.usedButtonIndices.forEach(buttonIndex => {
+                    if (buttonIndex !== null && buttonIndex !== undefined) {
+                        usedIndices.add(buttonIndex);
+                    }
+                });
+            }
             
             gameState.availableLetters.forEach((letter, index) => {
                 const button = document.createElement('button');
                 button.className = 'letter-button';
                 button.textContent = letter;
                 button.onclick = () => selectLetter(letter, index);
-                button.disabled = false;
                 
-                // Initialize counter for this letter if not exists
-                if (!renderedUsed[letter]) {
-                    renderedUsed[letter] = 0;
-                }
-                
-                // Count how many of this letter are currently used in the answer (including revealed)
-                const usedInAnswer = gameState.currentAnswer.filter(l => l === letter).length;
-                
-                // If this specific instance of the letter should be disabled
-                // (we've used as many or more letters than we've rendered so far)
-                if (renderedUsed[letter] < usedInAnswer) {
-                    button.disabled = true;
-                    renderedUsed[letter]++;
-                }
+                // Disable button if this specific index is being used in the answer
+                button.disabled = usedIndices.has(index);
                 
                 container.appendChild(button);
             });
@@ -2284,6 +2279,11 @@
             const emptyIndex = gameState.currentAnswer.indexOf('');
             if (emptyIndex !== -1 && !gameState.revealedPositions.includes(emptyIndex)) {
                 gameState.currentAnswer[emptyIndex] = letter;
+                // Store the button index that was used for this position
+                if (!gameState.usedButtonIndices) {
+                    gameState.usedButtonIndices = [];
+                }
+                gameState.usedButtonIndices[emptyIndex] = buttonIndex;
                 renderAnswerBoxes();
                 renderLetters();
                 
@@ -2297,6 +2297,10 @@
         function removeLetter(position) {
             if (gameState.currentAnswer[position] && !gameState.revealedPositions.includes(position)) {
                 gameState.currentAnswer[position] = '';
+                // Clear the button index mapping for this position
+                if (gameState.usedButtonIndices) {
+                    gameState.usedButtonIndices[position] = null;
+                }
                 renderAnswerBoxes();
                 renderLetters();
             }
@@ -2456,10 +2460,7 @@
         }
 
         function confirmQuitGame() {
-            const confirmed = confirm('Are you sure you want to return to the menu? Your current progress will be lost.');
-            if (confirmed) {
-                backToIntro();
-            }
+            backToIntro();
         }
 
         // ===== HINT SYSTEM =====
@@ -2652,13 +2653,11 @@
             const phone = document.getElementById('juicePhone').value;
             
             if (!phone || phone.length < 8) {
-                alert('Please enter a valid mobile number');
                 return;
             }
             
             // Validate Mauritian number
             if (!phone.startsWith('+230') && !phone.startsWith('5')) {
-                alert('Please enter a valid Mauritian mobile number (+230 5XXX XXXX)');
                 return;
             }
             
@@ -2720,7 +2719,6 @@
             const pin4 = document.getElementById('pin4').value;
             
             if (!pin1 || !pin2 || !pin3 || !pin4) {
-                alert('Please enter your complete 4-digit PIN');
                 return;
             }
             
@@ -2763,11 +2761,8 @@
                 // Close payment modal
                 closeJuiceModal();
                 
-                // Show success message
-                setTimeout(() => {
-                    alert(`✅ Purchase Successful!\n\nYou received ${pack.total} points!\n\nNew balance: ${gameState.coins} points`);
-                    updateHintButtons();
-                }, 300);
+                // Show success - points added
+                updateHintButtons();
                 
             } else if (gameState.currentHintType) {
                 // Bought hint with real money (MCB Juice payment)
@@ -2777,13 +2772,8 @@
                 // Close payment modal
                 closeJuiceModal();
                 
-                // Show success message
-                setTimeout(() => {
-                    alert(`✅ Payment Successful!\n\nYou purchased "${hintInfo.name}" for ${gameState.currentHintPrice}!`);
-                    
-                    // Apply the hint
-                    applyHint(gameState.currentHintType);
-                }, 300);
+                // Apply the hint
+                applyHint(gameState.currentHintType);
             }
         }
 
@@ -2960,7 +2950,7 @@
                             <div style="font-size: 14px; color: var(--text-gray); margin-bottom: 12px;">
                                 Download the app now to use your gift!
                             </div>
-                            <a href="https://www.mcb.mu/en/personal/bank-and-invest/digital-banking/mcb-juice" target="_blank" style="display: inline-block; background: linear-gradient(135deg, var(--mcb-red), #C41530); color: white; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 15px;">
+                            <a href="https://play.google.com/store/apps/details?id=com.mcbmu.juice" target="_blank" style="display: inline-block; background: linear-gradient(135deg, var(--mcb-red), #C41530); color: white; padding: 12px 28px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 15px;">
                                 Download MCB Juice
                             </a>
                         </div>
@@ -3005,6 +2995,9 @@
                     <input type="tel" id="giftCardPhone" class="gift-card-input" placeholder="5XXX XXXX" maxlength="8">
                     <button class="gift-card-claim-btn" onclick="claimGiftCard()">
                         🎁 CLAIM MY GIFT 🎁
+                    </button>
+                    <button class="gift-card-close-btn" onclick="closeGiftCard()" style="background: #6C757D; margin-top: 12px; width: 100%; padding: 14px; border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                        ✖️ Close
                     </button>
                 </div>
 
