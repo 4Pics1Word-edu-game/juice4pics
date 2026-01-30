@@ -2426,11 +2426,11 @@
             
             document.getElementById('finalScreen').classList.remove('hidden');
             
-            // Si le joueur a 100+ points, afficher la carte cadeau après un délai
+            // Si le joueur a 100+ points, afficher la carte cadeau flashy après un délai
             if (totalCoins >= 100) {
                 setTimeout(() => {
                     showGiftCard();
-                }, 2500);
+                }, 1500);
             }
         }
 
@@ -2461,36 +2461,104 @@
         // ===== HINT SYSTEM =====
         function selectHint(hintType) {
             const cost = getHintCost(hintType, gameState.currentLevel);
+            const hintInfo = hintPricing[hintType];
+            const hintPrice = hintType === 'revealLetter' ? 'Rs 20' : 'Rs 60';
             
-            // Check if player has enough points
-            if (gameState.coins >= cost) {
-                // Player has enough points - use them directly (no confirmation)
-                gameState.coins -= cost;
-                document.getElementById('coinsCount').textContent = gameState.coins;
-                updateJackpotDisplay(); // Update jackpot banner
-                applyHint(hintType);
-                
-            } else {
-                // Player doesn't have enough points - offer to buy hint with real money via MCB Juice
-                const hintInfo = hintPricing[hintType];
-                const hintPrice = hintType === 'revealLetter' ? 'Rs 20' : 'Rs 60'; // Reveal Letter = Rs 20, Reveal Word = Rs 60
-                
-                if (confirm(`You don't have enough points (need ${cost}, you have ${gameState.coins})!\n\nWould you like to buy "${hintInfo.name}" for ${hintPrice} using MCB Juice?`)) {
-                    // Store the hint type and price for purchase
-                    gameState.currentHintType = hintType;
-                    gameState.currentHintPrice = hintPrice;
-                    gameState.purchasingPack = null;
-                    
-                    // Show MCB Juice payment modal
-                    document.getElementById('juiceModal').classList.add('active');
-                    document.getElementById('juiceStep1').classList.remove('hidden');
-                    document.getElementById('juiceStep2').classList.add('hidden');
-                    document.getElementById('juiceStep3').classList.add('hidden');
-                    document.getElementById('juicePhone').value = '';
-                    
-                    // Update payment summary with hint info
-                    document.getElementById('recipientDisplay').textContent = hintInfo.name + ' (' + hintPrice + ')';
-                }
+            // Always show a choice modal (not scary confirm, but a nice modal)
+            showHintPaymentChoice(hintType, cost, hintInfo, hintPrice);
+        }
+
+        function showHintPaymentChoice(hintType, cost, hintInfo, hintPrice) {
+            const hasEnoughPoints = gameState.coins >= cost;
+            
+            // Create a nice modal for choice
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'hintChoiceModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 420px;">
+                    <div style="padding: 24px; text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 16px;">${hintInfo.icon}</div>
+                        <div style="font-size: 22px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px;">
+                            ${hintInfo.name}
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-gray); margin-bottom: 24px;">
+                            ${hintInfo.description}
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            ${hasEnoughPoints ? `
+                                <button onclick="usePointsForHint('${hintType}', ${cost})" style="background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-dark)); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s ease;">
+                                    💰 Use ${cost} Points
+                                </button>
+                            ` : `
+                                <div style="background: #FFF3E0; padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                                    <div style="font-size: 14px; color: #E65100;">
+                                        ⚠️ Not enough points (need ${cost}, you have ${gameState.coins})
+                                    </div>
+                                </div>
+                            `}
+                            
+                            <button onclick="buyHintWithJuice('${hintType}', '${hintPrice}')" style="background: linear-gradient(135deg, var(--mcb-red), #C41530); color: white; border: none; padding: 16px 24px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s ease;">
+                                💳 Buy for ${hintPrice} (MCB Juice)
+                            </button>
+                            
+                            <button onclick="closeHintChoiceModal()" style="background: var(--bg-light); color: var(--text-gray); border: 2px solid var(--bg-light); padding: 12px 24px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer;">
+                                Cancel
+                            </button>
+                        </div>
+                        
+                        ${gameState.coins >= 100 ? `
+                            <div style="background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); padding: 12px; border-radius: 8px; margin-top: 16px;">
+                                <div style="font-size: 13px; color: white; font-weight: 600;">
+                                    💡 Tip: Buy with money to keep your points for the Rs 1000 gift!
+                                </div>
+                            </div>
+                        ` : gameState.coins >= 80 ? `
+                            <div style="background: var(--primary-blue-pale); padding: 12px; border-radius: 8px; margin-top: 16px;">
+                                <div style="font-size: 13px; color: var(--primary-blue-dark); font-weight: 600;">
+                                    💡 Save points to reach 100+ for a special surprise!
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function usePointsForHint(hintType, cost) {
+            closeHintChoiceModal();
+            gameState.coins -= cost;
+            document.getElementById('coinsCount').textContent = gameState.coins;
+            updateJackpotDisplay();
+            applyHint(hintType);
+        }
+
+        function buyHintWithJuice(hintType, hintPrice) {
+            closeHintChoiceModal();
+            const hintInfo = hintPricing[hintType];
+            
+            // Store the hint type and price for purchase
+            gameState.currentHintType = hintType;
+            gameState.currentHintPrice = hintPrice;
+            gameState.purchasingPack = null;
+            
+            // Show MCB Juice payment modal
+            document.getElementById('juiceModal').classList.add('active');
+            document.getElementById('juiceStep1').classList.remove('hidden');
+            document.getElementById('juiceStep2').classList.add('hidden');
+            document.getElementById('juiceStep3').classList.add('hidden');
+            document.getElementById('juicePhone').value = '';
+            
+            // Update payment summary with hint info
+            document.getElementById('recipientDisplay').textContent = hintInfo.name + ' (' + hintPrice + ')';
+        }
+
+        function closeHintChoiceModal() {
+            const modal = document.getElementById('hintChoiceModal');
+            if (modal) {
+                modal.remove();
             }
         }
 
