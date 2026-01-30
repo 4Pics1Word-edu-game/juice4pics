@@ -2081,7 +2081,9 @@
             revealedPositions: [],
             currentHintType: null,  // Track which hint is being purchased
             currentHintPrice: null,  // Track the price of the hint (Rs 20 or Rs 60)
-            purchasingPack: null  // Track if buying points pack
+            purchasingPack: null,  // Track if buying points pack
+            pendingHintCost: null,  // Cost to deduct after user confirms hint selection
+            pendingHintType: null   // Type of hint pending confirmation
         };
 
         // ===== INITIALIZATION =====
@@ -2444,7 +2446,9 @@
                 availableLetters: [],
                 revealedPositions: [],
                 currentHintType: null,
-                purchasingPack: null
+                purchasingPack: null,
+                pendingHintCost: null,
+                pendingHintType: null
             };
             
             document.getElementById('finalScreen').classList.add('hidden');
@@ -2529,9 +2533,12 @@
 
         function usePointsForHint(hintType, cost) {
             closeHintChoiceModal();
-            gameState.coins -= cost;
-            document.getElementById('coinsCount').textContent = gameState.coins;
-            updateJackpotDisplay();
+            
+            // Store the cost to deduct later (after user confirms)
+            gameState.pendingHintCost = cost;
+            gameState.pendingHintType = hintType;
+            
+            // Apply the hint (will ask for confirmation if it's revealLetter)
             applyHint(hintType);
         }
 
@@ -2785,9 +2792,19 @@
             
             if (hintType === 'revealLetter') {
                 // Show modal to choose which letter to reveal
+                // Points will be deducted when user selects a letter
                 showHintSelection();
                 
             } else if (hintType === 'revealWord') {
+                // Deduct points NOW for revealWord (no selection needed)
+                if (gameState.pendingHintCost) {
+                    gameState.coins -= gameState.pendingHintCost;
+                    document.getElementById('coinsCount').textContent = gameState.coins;
+                    updateJackpotDisplay();
+                    gameState.pendingHintCost = null;
+                    gameState.pendingHintType = null;
+                }
+                
                 // Reveal the complete word
                 const word = level.word;
                 gameState.currentAnswer = word.split('');
@@ -2838,6 +2855,15 @@
             gameState.revealedPositions.push(position);
             gameState.currentAnswer[position] = letter;
             
+            // Deduct points NOW (only when user actually selects a letter)
+            if (gameState.pendingHintCost) {
+                gameState.coins -= gameState.pendingHintCost;
+                document.getElementById('coinsCount').textContent = gameState.coins;
+                updateJackpotDisplay();
+                gameState.pendingHintCost = null;
+                gameState.pendingHintType = null;
+            }
+            
             renderAnswerBoxes();
             renderLetters();
             closeHintModal();
@@ -2851,6 +2877,10 @@
 
         function closeHintModal() {
             document.getElementById('hintModal').classList.remove('active');
+            
+            // If user cancels without selecting a letter, clear pending cost
+            gameState.pendingHintCost = null;
+            gameState.pendingHintType = null;
         }
 
         function closeJuiceModal() {
