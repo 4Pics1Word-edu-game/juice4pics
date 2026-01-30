@@ -2220,6 +2220,7 @@
         // ===== HINT SYSTEM =====
         function selectHint(hintType) {
             const cost = getHintCost(hintType, gameState.currentLevel);
+            const currentLevelIndex = gameState.currentLevel;
             
             // Check if player has enough points
             if (gameState.coins >= cost) {
@@ -2230,7 +2231,15 @@
                 applyHint(hintType);
                 
             } else {
-                // Player doesn't have enough points - offer to buy hint with real money via MCB Juice
+                // Check if current level allows purchasing hints (levels 4 and 5 only)
+                // Level 4 = SCAN-TO-PAY (index 3), Level 5 = AUTHENTICATION (index 4)
+                if (currentLevelIndex < 3) {
+                    // Levels 1, 2, 3 - Cannot purchase hints
+                    alert(`You don't have enough points!\n\nYou need ${cost} points but only have ${gameState.coins} points.\n\nHint: You can earn more points by completing levels, or wait until Level 4 (SCAN-TO-PAY) where you can purchase hints with MCB Juice!`);
+                    return;
+                }
+                
+                // Levels 4 and 5 - Can purchase hints with MCB Juice
                 const hintInfo = hintPricing[hintType];
                 const hintPrice = hintType === 'revealLetter' ? 'Rs 20' : 'Rs 60'; // Reveal Letter = Rs 20, Reveal Word = Rs 60
                 
